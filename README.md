@@ -6,6 +6,8 @@
 
 # to develop run npm run dev
 
+# after build .exe is located in release -> 0.0.0 -> quizrep.0.0.0.0.exe
+
 # why? because quizlet deleted astroid mode, the only game mode i used
 
 # so, if you don't mind, i have '[ d ]' as the special word that seperates the front from the back of the note card
