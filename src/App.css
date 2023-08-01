@@ -1,0 +1,115 @@
+#root {
+  width : 100vw;
+  height : 100vh;
+  display : flex;
+  flex-direction: row;
+  overflow: hidden;
+  position: relative;
+
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#root {
+  overflow: hidden;
+}
+body {
+  overflow: hidden;
+}
+
+.Super {
+  width : 100%;
+  height : 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.Header {
+  width : 100%;
+  height : 1.5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  border-bottom: 1px solid white;
+  gap : .5rem;
+
+}
+
+.Header > * {
+  text-align: start;
+}
+
+
+
+.Body {
+  display: flex;
+  flex-direction: row;
+  width : 100%;
+  height : 100%;
+  overflow: hidden;
+}
+
+.Navigation {
+  width : 7rem;
+  height : 100%;
+  border-right: 1px solid white;
+  display: flex;
+  flex-direction: column;
+  gap : 2px;
+  overflow-y: auto;
+  > * {
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+  }
+  > :last-child {
+    margin-bottom: 1rem;
+  }
+}
+
+.Panel {
+  height : 80%;
+  width : 80%;
+  border: 2px solid white;
+  border-radius: 10px;
+  
+  justify-content: center;
+  align-items: center;
+  display: flex;
+
+  flex-direction: column;
+
+}
+
+.Panel > *:first-child {
+  margin-top: 10rem;
+  margin-bottom: 2rem;
+}
+.Panel > *:nth-child(2) {
+  margin-bottom: 10rem;
+}
+.Panel > *:last-child{
+  margin-bottom: auto;
+}
+
+.Panel > label {
+  font-size: x-large;
+}
+
+.Panel > input {
+  font-size: x-large;
+}
+
+.Selected {
+  border : 2px solid rgba(218, 165, 32, 0.358);
+}
+
+.Main {
+  display: flex;
+  width : 100%;
+  height : 100%;
+  align-items: center;
+  justify-content: center;
+}
