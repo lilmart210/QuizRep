@@ -1,5 +1,7 @@
 # QuizRep
 
+# first do npm install
+
 # to build run npm run build
 
 # to develop run npm run dev
