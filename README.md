@@ -10,4 +10,16 @@
 
 # can parse the , and ，in a notecard / definition. Easily extendable to add others.
 
-# 
+# HOW TO
+
+# click import and navigate to this directory where you can see the EXAMPLEFILE.txt
+
+# default time is 5000 ms, if you need a different time you can change it in the number select
+
+# click start when ready
+
+# shift-enter deletes the current line
+
+# enter deletes the current like with submission
+
+# esc key is for when you don't know a term
