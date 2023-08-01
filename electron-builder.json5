@@ -32,7 +32,7 @@
   "nsis": {
     "oneClick": true,
     "perMachine": false,
-    "allowToChangeInstallationDirectory": true,
+    "allowToChangeInstallationDirectory": false,
     "deleteAppDataOnUninstall": false
   }
 }
