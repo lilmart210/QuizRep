@@ -196,7 +196,7 @@ function App() {
       setTermList(prev=>prev.sort(()=>(Math.random() > .5 ? 1 : -1)));
     }
     if(!pickedTerm){
-      pickedTerm = RemainingTerms.pop();
+      pickedTerm = RemainingTerms.sort(()=>(Math.random() > .5 ? 1 : -1)).pop();
     }
     //generate new arr
     SetSelectedTerm(pickedTerm);
