@@ -106,6 +106,12 @@ function App() {
 
   const [SelectedTerm,SetSelectedTerm] = useState<Terms>();
 
+  const [RemainingTerms,SetRemainingTerms] = useState<Array<Terms>>([]);
+  const [level,setLevel] = useState(0);
+
+  const [take,setTake] = useState(5);
+
+
   const [duration,setDuration] = useState(5000);
   //const [level,setLevel] = useState(0);
   const [points,setPoints] = useState(0);
@@ -168,11 +174,32 @@ function App() {
 
   },[selected])
 
-  function randompick(){
-    const len = termlist.length;
-    const pi = Math.floor(Math.random() * len);
 
-    SetSelectedTerm(termlist[pi]);
+  function randompick(){
+    //const len = termlist.length;
+    //const pi = Math.floor(Math.random() * len);
+    //remaining term level
+    //reset if empty, increase level
+    let pickedTerm;
+    if(RemainingTerms.length == 0){
+      setLevel((prev)=>prev + 1);
+      const startpos = (take * level) % termlist.length;
+      const end = Math.min(termlist.length,take + startpos);
+
+      const newterms = termlist.slice(startpos,end)
+      .reduce((prev,cur)=>([...prev,cur,cur]),[] as Array<Terms>)
+      .sort(()=>(Math.random() > .5 ? 1 : -1));
+
+      pickedTerm = newterms.pop();
+      SetRemainingTerms(newterms);
+
+      setTermList(prev=>prev.sort(()=>(Math.random() > .5 ? 1 : -1)));
+    }
+    if(!pickedTerm){
+      pickedTerm = RemainingTerms.pop();
+    }
+    //generate new arr
+    SetSelectedTerm(pickedTerm);
 
   }
   
@@ -256,6 +283,10 @@ function App() {
       <button onClick={stop}>stop</button>
       <button onClick={()=>setSides(!sides)}>{sides ? 'back' : 'front'}</button>
       <button onClick={reset}>reset</button>
+      <label>
+        take :
+      </label>
+      <input type = 'number' defaultValue={take} onChange={(e)=>setTake(Number(e.currentTarget.value))}/>
     </div>
 
     <div className='Body'>
@@ -264,7 +295,10 @@ function App() {
         {
           files.map((itm,i)=>(
             <button className={`${selected == itm ? 'Selected' : ''}`}
-            key={i} onClick={()=>setSelected(itm)}>
+            key={i} onClick={()=>{
+              setSelected(itm);
+              SetRemainingTerms([])
+            }}>
               {itm}
             </button>
           ))
@@ -287,6 +321,7 @@ function App() {
               </>
             }
           </label>
+          <label>level {level}</label>
           <progress value={timer.delta} max={duration}></progress>
           <input onKeyDown={Submit}></input>
         </div>
