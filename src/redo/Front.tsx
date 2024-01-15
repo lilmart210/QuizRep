@@ -47,8 +47,9 @@ function ParseCSV(text : string){
             ignore = !ignore;
         }
         const exclude = ['\r','\n',',','"']
-        if(i == split.length - 1){
+        if(i == split.length - 1 && !exclude.includes(split[i])){
             if(!exclude.includes(split[i])) aword += split[i];
+            
             csv.push(aword);
         }
 
@@ -88,6 +89,7 @@ function ToCsv(text : string[],length : number){
 
 function TextToCards(text : string){
     const adata = ParseCSV(text);
+
     if(adata.length % 2 > 0 || adata.length == 0) return [];
     const res : Card[] = []
     for(let i = 0; i < adata.length / 2;i++){
@@ -98,6 +100,18 @@ function TextToCards(text : string){
     return res;
 }
 
+
+function RemoveleftPadding(term : string){
+    let start = 0;
+    for(let i =0;i<term.length;i++){
+        if(term[i] == ' '){
+            start += 1;
+            continue;
+        }
+        break;
+    }
+    return term.slice(start,term.length);
+}
 function TermToArr(term : string){
     //ignore whitespaces before sub-section
     //break at the delims
@@ -120,6 +134,13 @@ function TermToArr(term : string){
     }
 
     return words;
+}
+function Reverse(astr : string){
+    let str = '';
+    for(let i = 0;i < astr.length;i++){
+        str += astr[(astr.length - 1) - i];
+    }
+    return str;
 }
 
 function useTimeout({callback,duration} : {callback : Function,duration : number}){
@@ -217,6 +238,7 @@ export function Front(){
     },[SelectedFile])
 
     function PopulateStudyList(){
+        if(Cards.length == 0) return;
         SetLevel(prev=>prev+1);
         const levelcards : Card[] = [];
         //get unseen cards | seen < repeatlength
@@ -257,7 +279,11 @@ export function Front(){
 
     function PopStudyList(){
         let newterm : Card | undefined= StudyList[0];
-        if(!StudyList.length) newterm = PopulateStudyList();
+        let poped = false;
+        if(!StudyList.length){
+            poped = true;
+            newterm = PopulateStudyList();
+        }
         
         if(!newterm) return;
         const rside = Math.random() > .5 ? 'Front' : 'Back'
@@ -266,19 +292,25 @@ export function Front(){
         SetCurrentTerm(termside == 'Front' ? 'front' : 'back');
         SetCurrentCard(newterm)
         //this is cutting out two...
-        SetStudyList(prev=>prev.filter((itm,i)=>i != 0));
+        if(!poped) SetStudyList(prev=>prev.filter((itm,i)=>i != 0));
     }
 
     function HandleEntry(e : React.KeyboardEvent<HTMLInputElement>){
+        
         if(!CurrentCard || !CurrentTerm) return;
         const guess = e.currentTarget.value;
 
         const flipped = CurrentTerm == 'back' ? 'front' : 'back';
-        const terms = TermToArr(CurrentCard[flipped]);
+        let terms = TermToArr(CurrentCard[flipped]);
+        terms = terms.map((itm)=>{
+            const rml = RemoveleftPadding(itm);
+            const rev = Reverse(rml);
+            const rmr = RemoveleftPadding(rev);
+            return Reverse(rmr);
+        });
 
         const correct = terms.includes(guess);
         const cardloc = Cards.findIndex((itm)=>itm.back == CurrentCard.back && itm.front == CurrentCard.front);
-
 
         if(correct && !TimedOut){
             SetPoints(prev=>prev+100);
@@ -477,7 +509,7 @@ export function Front(){
                             <label>{`Level: ${Level} Score: ${Points}`}</label>
                         </div>
                         <div className='Progress'>
-                            <progress value={TakeSize - StudyList.length} max={TakeSize}></progress>
+                            <progress value={TakeSize - (StudyList.length + 1)} max={TakeSize}></progress>
                             <progress value={TimedOut? duration : timer.Elapsed} max={duration}></progress>
                         </div>
                         <label>{`${toguess} | ${toanswer}`}</label>
