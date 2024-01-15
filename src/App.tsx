@@ -174,7 +174,6 @@ function App() {
 
   },[selected])
 
-
   function randompick(){
     //const len = termlist.length;
     //const pi = Math.floor(Math.random() * len);
@@ -190,10 +189,15 @@ function App() {
       .reduce((prev,cur)=>([...prev,cur,cur]),[] as Array<Terms>)
       .sort(()=>(Math.random() > .5 ? 1 : -1));
 
+      if(end >= termlist.length ){
+        //random shuffle the terms when the ends get hit
+        setTermList(prev=>prev.sort(()=>(Math.random() > .5 ? 1 : -1)));
+      }
+
       pickedTerm = newterms.pop();
       SetRemainingTerms(newterms);
 
-      setTermList(prev=>prev.sort(()=>(Math.random() > .5 ? 1 : -1)));
+      
     }
     if(!pickedTerm){
       pickedTerm = RemainingTerms.sort(()=>(Math.random() > .5 ? 1 : -1)).pop();
@@ -205,12 +209,14 @@ function App() {
   
   function TimeoutFailed(){
     setFailed(true);
+    if(SelectedTerm) RemainingTerms.push(SelectedTerm);
   }
 
   function reset(){
     stop();
     SetSelectedTerm(undefined);
     setFailed(false);
+    setLevel(0)
     timer.reset();
   }
 

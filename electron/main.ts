@@ -77,3 +77,18 @@ ipcMain.handle('ReadFile',(e,path)=>{
   const conts = fs.readFileSync(path,{encoding : 'utf-8'})
   return conts;
 })
+
+ipcMain.handle('CreateDialog',async (e,opts)=>{
+  if(!win) return;
+  const {canceled,filePath} = await dialog.showSaveDialog(
+    win,
+    {
+      ...opts
+    }
+  )
+  if(!canceled) return filePath
+  return null;
+})
+ipcMain.handle('SaveFileData',(e,apath,data)=>{
+  fs.writeFileSync(apath,data,{encoding : 'utf-8'})
+})

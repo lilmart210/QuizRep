@@ -3,7 +3,9 @@ import { contextBridge,ipcRenderer } from "electron"
 contextBridge.exposeInMainWorld('backend',{
   openFolder : (...args : Array<any>) => ipcRenderer.invoke('ShowDialog',...args),
   listfolder : (...args : Array<any>) => ipcRenderer.invoke('ListDirectory',...args),
-  readFile : (...args : Array<any>)=> ipcRenderer.invoke('ReadFile',...args)
+  readFile : (...args : Array<any>)=> ipcRenderer.invoke('ReadFile',...args),
+  CreateDialog : (...args : Array<any>)=>ipcRenderer.invoke('CreateDialog',...args),
+  SaveFileData : (...args : Array<any>)=>ipcRenderer.invoke('SaveFileData',...args),
 })
 
 
